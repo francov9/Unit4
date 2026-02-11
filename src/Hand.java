@@ -140,9 +140,6 @@ public class Hand {
             }
         }
     }
-    public String toString(){
-        return Arrays.toString(hand) + " rank: " + rank;
-    }
     public static String countOfHands() {
         return "Number of five of a kind hands: " + handCount[6] + "\n" +
                 "Number of four of a kind hands: " + handCount[5] + "\n" +
