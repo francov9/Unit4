@@ -1,18 +1,48 @@
+import java.util.Arrays;
+
 public class Hand {
     private static int[] handCount = {0, 0, 0, 0, 0, 0, 0};
     private final int[] hand;
     private final int classification;
+    private int jackClassification;
     private final int bet;
     private int rank;
     private static int total;
     public Hand(int[] hand, int bet){
         this.hand = hand.clone();
-        rank = total;
+        setRank();
         classification = setClassification(hand);
+        setJackClassification(jackCount());
         this.bet = bet;
     }
 
-    public static int setClassification(int[] hand){
+    private int jackCount(){
+        int jacks = 0;
+        for(int card : hand){
+            if(card == 11){
+                jacks++;
+            }
+        }
+        return jacks;
+    }
+
+    private void setJackClassification(int jacks){
+        switch (classification){
+            case 6, 7, 5 -> jackClassification = 7;
+            case 4 -> jackClassification = 6;
+            case 3 -> {
+                if(jacks == 2){
+                    jackClassification = 6;
+                }else{
+                    jackClassification = 4;
+                }
+            }
+            case 2 -> jackClassification = 4;
+            case 1 -> jackClassification = 2;
+        }
+    }
+
+    private static int setClassification(int[] hand){
         int[] handClone = hand.clone();
         int[][] classifying = new int[5][2];
         for(int i = 0; i < 5; i++){
@@ -69,8 +99,8 @@ public class Hand {
         total = i;
     }
 
-    public int[] getHand(){
-        return hand;
+    public void setRank() {
+        this.rank = total;
     }
 
     public int getBet() {
@@ -81,28 +111,39 @@ public class Hand {
         return rank;
     }
 
-    public static void compareHands(Hand hand1, Hand hand2){
+    public int getClassification() {
+        return classification;
+    }
+
+    public int getJackClassification() {
+        return jackClassification;
+    }
+
+    public static void compareHands(Hand hand1, Hand hand2, int classification1, int classification2){
         int[] cards1 = hand1.hand;
         int[] cards2 = hand2.hand;
-        if(hand1.classification > hand2.classification){
+        if(classification1 > classification2){
             hand2.rank--;
-        }else if(hand2.classification > hand1.classification){
+        }else if(classification2 > classification1){
             hand1.rank--;
         }else{
             for(int i = 0; i < cards1.length; i++){
-                if(cards1[i] < cards2[i]){
-                    hand1.rank--;
-                    break;
-                }else if (cards1[i] > cards2[i]){
+                if(cards1[i] == cards2[i]){
+                    continue;
+                }else if(cards1[i] > cards2[i]){
                     hand2.rank--;
-                    break;
+                    return;
+                }else{
+                    hand1.rank--;
+                    return;
                 }
             }
         }
     }
-
-    @Override
-    public String toString() {
+    public String toString(){
+        return Arrays.toString(hand) + " rank: " + rank;
+    }
+    public static String countOfHands() {
         return "Number of five of a kind hands: " + handCount[6] + "\n" +
                 "Number of four of a kind hands: " + handCount[5] + "\n" +
                 "Number of full house hands: " + handCount[4] + "\n" +
