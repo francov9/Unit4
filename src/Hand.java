@@ -1,7 +1,5 @@
-import java.util.Arrays;
-
 public class Hand {
-    private static int[] handCount = {0, 0, 0, 0, 0, 0, 0};
+    private static final int[] handCount = {0, 0, 0, 0, 0, 0, 0};
     private final int[] hand;
     private final int classification;
     private int jackClassification;
@@ -27,18 +25,22 @@ public class Hand {
     }
 
     private void setJackClassification(int jacks){
-        switch (classification){
-            case 6, 7, 5 -> jackClassification = 7;
-            case 4 -> jackClassification = 6;
-            case 3 -> {
-                if(jacks == 2){
-                    jackClassification = 6;
-                }else{
-                    jackClassification = 4;
+        if(jacks > 0){
+            switch (classification){
+                case 5, 6, 7 -> jackClassification = 7;
+                case 4 -> jackClassification = 6;
+                case 3 -> {
+                    if(jacks == 2){
+                        jackClassification = 6;
+                    }else{
+                        jackClassification = 5;
+                    }
                 }
+                case 2 -> jackClassification = 4;
+                case 1 -> jackClassification = 2;
             }
-            case 2 -> jackClassification = 4;
-            case 1 -> jackClassification = 2;
+        }else{
+            jackClassification = classification;
         }
     }
 
@@ -119,21 +121,29 @@ public class Hand {
         return jackClassification;
     }
 
-    public static void compareHands(Hand hand1, Hand hand2, int classification1, int classification2){
+    public static void compareHands(Hand hand1, Hand hand2, int classification1, int classification2, boolean wild){
         int[] cards1 = hand1.hand;
         int[] cards2 = hand2.hand;
+        if(wild){
+            for (int i = 0; i < 5; i++) {
+                if(cards1[i] == 11){
+                    cards1[i] = 1;
+                }
+                if(cards2[i] == 11){
+                    cards2[i] = 1;
+                }
+            }
+        }
         if(classification1 > classification2){
             hand2.rank--;
         }else if(classification2 > classification1){
             hand1.rank--;
         }else{
             for(int i = 0; i < cards1.length; i++){
-                if(cards1[i] == cards2[i]){
-                    continue;
-                }else if(cards1[i] > cards2[i]){
+                if(cards1[i] > cards2[i]){
                     hand2.rank--;
                     return;
-                }else{
+                }else if(cards1[i]< cards2[i]){
                     hand1.rank--;
                     return;
                 }

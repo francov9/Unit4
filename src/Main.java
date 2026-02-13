@@ -38,7 +38,7 @@ public class Main {
             }
             for (int a = 0; a < hands.length-1; a++) {
                 for (int b = a + 1; b < hands.length; b++) {
-                    Hand.compareHands(hands[a], hands[b], hands[a].getClassification(), hands[b].getClassification());
+                    Hand.compareHands(hands[a], hands[b], hands[a].getClassification(), hands[b].getClassification(), false);
                 }
             }
             int totalBet = 0;
@@ -52,7 +52,7 @@ public class Main {
             }
             for (int a = 0; a < hands.length-1; a++) {
                 for (int b = a + 1; b < hands.length; b++) {
-                    Hand.compareHands(hands[a], hands[b], hands[a].getJackClassification(), hands[b].getJackClassification());
+                    Hand.compareHands(hands[a], hands[b], hands[a].getJackClassification(), hands[b].getJackClassification(), true);
                 }
             }
             totalBet = 0;
